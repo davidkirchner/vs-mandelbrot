@@ -37,7 +37,7 @@ public class Test extends JPanel {
                 double yRelative = yCoordinate / img.getHeight();
                 double cReal = rangeReal * xRelative + centerReal - rangeReal / 2;
                 double cImaginary = rangeImaginary * yRelative + centerImaginary - rangeImaginary / 2;
-                
+
                 double zImaginary = 0;
                 double zReal = 0;
                 int iteration = 0;
@@ -50,11 +50,9 @@ public class Test extends JPanel {
                     iteration += 1;
                 }
 
-                if (iteration < maxIterations){
-                    img.setRGB(x, y, Color.WHITE.getRGB());
-                }else{
-                    img.setRGB(x, y, Color.BLACK.getRGB());
-                }
+                int colorValue = 255 * iteration / maxIterations;
+                Color pixelColor = new Color(255-colorValue, 255-colorValue, 255-colorValue);
+                img.setRGB(x, y, pixelColor.getRGB());
             }
         }
         return img;
