@@ -1,25 +1,17 @@
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import javax.swing.event.MouseInputListener;
-
-import org.w3c.dom.events.MouseEvent;
-
 import javax.swing.JLabel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics2D;
-// import java.awt.event.KeyListener;
-// import java.awt.event.KeyEvent;
-// import java.awt.event.MouseEvent;
-// import java.awt.event.MouseListener;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
-public class Standalone extends JPanel{
+import java.lang.Math;
+
+public class Standalone extends JPanel {
 
     static int IMG_WIDTH = 1280;
     static int IMG_HEIGHT = 720;
@@ -32,40 +24,50 @@ public class Standalone extends JPanel{
     double centerReal = -0.75;
     double centerImaginary = 0;
     int maxIterations = 50;
+    Color colorPalette[];
 
-    
-    
     KeyListener keyListener = new KeyListener() {
         @Override
         public void keyPressed(KeyEvent event) {
+            // key W
             if (event.getKeyCode() == KeyEvent.VK_W) {
                 centerImaginary -= 0.05 * rangeImaginary;
                 display(createImage());
+                // key A
             } else if (event.getKeyCode() == KeyEvent.VK_A) {
                 centerReal -= 0.05 * rangeReal;
                 display(createImage());
+                // key S
             } else if (event.getKeyCode() == KeyEvent.VK_S) {
                 centerImaginary += 0.05 * rangeImaginary;
                 display(createImage());
+                // key D
             } else if (event.getKeyCode() == KeyEvent.VK_D) {
                 centerReal += 0.05 * rangeReal;
                 display(createImage());
-            } else if (event.getKeyCode() == KeyEvent.VK_UP) {
-                maxIterations += Math.ceil(maxIterations * 0.05);
-                display(createImage());
-            } else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
-                System.out.println(maxIterations);
-                if (maxIterations - maxIterations * 0.05 > 1)
-                    maxIterations -= maxIterations * 0.05;
-                display(createImage());
-            }else if (event.getKeyCode() == KeyEvent.VK_I) {
+                // key I
+            } else if (event.getKeyCode() == KeyEvent.VK_I) {
                 rangeReal -= 0.05 * rangeReal;
                 rangeImaginary -= 0.05 * rangeImaginary;
                 display(createImage());
-            }else if (event.getKeyCode() == KeyEvent.VK_O){
+                // key O
+            } else if (event.getKeyCode() == KeyEvent.VK_O) {
                 rangeReal += 0.05 * rangeReal;
                 rangeImaginary += 0.05 * rangeImaginary;
-                display(createImage());                
+                display(createImage());
+                // key Arrow up
+            } else if (event.getKeyCode() == KeyEvent.VK_UP) {
+                maxIterations += Math.ceil(maxIterations * 0.05);
+                updateColorPalette(maxIterations);
+                display(createImage());
+                // key Arrow down
+            } else if (event.getKeyCode() == KeyEvent.VK_DOWN) {
+                System.out.println(maxIterations);
+                if (maxIterations - maxIterations * 0.05 > 1) {
+                    maxIterations -= maxIterations * 0.05;
+                    updateColorPalette(maxIterations);
+                    display(createImage());
+                }
             }
         }
 
@@ -78,6 +80,50 @@ public class Standalone extends JPanel{
         }
     };
 
+    public Standalone() {
+        updateColorPalette(maxIterations);
+    }
+
+    public void updateColorPalette(int n) {
+        Color end = new Color(0, 0, 0);
+        Color middle = new Color(233, 107, 0);
+        Color start = new Color(0, 51, 99);
+
+        colorPalette = new Color[n];
+        colorPalette[0] = start;
+        colorPalette[n - 1] = end;
+
+        double diffRedStartMiddle = (double) (middle.getRed() - start.getRed()) / (n/2);
+        double diffGreenStartMiddle = (double) (middle.getGreen() - start.getGreen()) / (n/2);
+        double diffBlueStartMiddle = (double) (middle.getBlue() - start.getBlue()) / (n/2);
+
+        double diffRedMiddleEnd = (double) (end.getRed() - middle.getRed()) / (n/2);
+        double diffGreenMiddleEnd = (double) (end.getGreen() - middle.getGreen()) / (n/2);
+        double diffBlueMiddleEnd = (double) (end.getBlue() - middle.getBlue()) / (n/2);
+
+        System.out.println("diffRMiddleEnd" + diffRedMiddleEnd);
+        System.out.println("diffGMiddleEnd" + diffGreenMiddleEnd);
+        System.out.println("diffBMiddleEnd" + diffBlueMiddleEnd);
+
+        for (int i = 0; i < n; i++) {
+            Color c;
+            if (i < n / 2) {
+                c = new Color(
+                        (int) Math.ceil(start.getRed() + i * diffRedStartMiddle),
+                        (int) Math.ceil(start.getGreen() + i * diffGreenStartMiddle),
+                        (int) Math.ceil(start.getBlue() + i * diffBlueStartMiddle));
+            } else {
+                c = new Color(
+                        (int) Math.ceil(middle.getRed() + (i-n/2) * diffRedMiddleEnd),
+                        (int) Math.ceil(middle.getGreen() + (i-n/2) * diffGreenMiddleEnd),
+                        (int) Math.ceil(middle.getBlue() + (i-n/2) * diffBlueMiddleEnd));
+            }
+            colorPalette[i] = c;
+            System.out.println("i: " + i);
+            System.out.println("r: " + c.getRed() + "  g: " + c.getGreen() + "  b: " + c.getBlue());
+
+        }
+    }
 
     public BufferedImage createImage() {
 
@@ -105,9 +151,11 @@ public class Standalone extends JPanel{
                     iteration += 1;
                 }
 
-                int colorValue = 255 * iteration / maxIterations;
-                Color pixelColor = new Color(255 - colorValue, 255 - colorValue, 255 - colorValue);
-                img.setRGB(x, y, pixelColor.getRGB());
+                // int colorValue = 255 * iteration / maxIterations;
+                // Color pixelColor = new Color(255 - colorValue, 255 - colorValue, 255 -
+                // colorValue);
+                // img.setRGB(x, y, pixelColor.getRGB());
+                img.setRGB(x, y, colorPalette[iteration - 1].getRGB());
             }
         }
         return img;
@@ -125,14 +173,11 @@ public class Standalone extends JPanel{
             frame.pack();
             frame.setVisible(true);
             frame.addKeyListener(keyListener);
-            // frame.addMouseListener(mouseListener);
-
         } else
             label.setIcon(new ImageIcon(image));
     }
 
     public static void main(String[] args) {
-
         Standalone t = new Standalone();
         BufferedImage img = t.createImage();
         t.display(img);
