@@ -6,7 +6,7 @@ public class MandelServerMain {
         try {
             MandelServerImpl server = new MandelServerImpl();
             Registry registry = LocateRegistry.createRegistry(1099);
-            registry.rebind("Mandelbrot", server);
+            registry.rebind(args[0], server);
             System.out.println("Server is ready.");
         } catch (Exception e) {
             e.printStackTrace();
