@@ -17,11 +17,26 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
             0x006A3403, };
     private ArrayList<MandelClient> allClients;
     private int[][] bild;
-    private int counter;
     private ThreadPoolExecutor pool;
 
     public MandelServerImpl() throws RemoteException {
+        // Unbounded queues. Using an unbounded queue (for example a LinkedBlockingQueue
+        // without a predefined capacity) will cause new tasks to wait in the queue when
+        // all corePoolSize threads are busy. Thus, no more than corePoolSize threads
+        // will ever be created. (And the value of the maximumPoolSize therefore doesn't
+        // have any effect.) This may be appropriate when each task is completely
+        // independent of others, so tasks cannot affect each others execution; for
+        // example, in a web page server. While this style of queuing can be useful in
+        // smoothing out transient bursts of requests, it admits the possibility of
+        // unbounded work queue growth when commands continue to arrive on average
+        // faster than they can be processed.
+        //
+        // LinkedBlockingQueue is a FIFO queue, new elements are inserted at the
+        // tail of the queue. Any attempt to retrieve a task out of the queue,
+        // can be seen safe as it will not return empty.
         allClients = new ArrayList<MandelClient>();
+        pool = new ThreadPoolExecutor(NUMBER_OF_THREADS, NUMBER_OF_THREADS, 0L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>());
     }
 
     public synchronized boolean addClient(MandelClient client) throws RemoteException {
@@ -57,16 +72,16 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
     }
 
     public synchronized boolean isFinish() throws RemoteException {
-        counter = pool.getActiveCount();
-        if (counter == 0) {
+        // Method getActiveCount returns the approximate number of active threads
+        // Whenn all tasks are done, this method will unblock client and he can
+        // update image (setRGB).
+        if (pool.getActiveCount() == 0) {
             return false;
         }
         return true;
     }
 
     public void calculateRGB(int yStart, int yStop, int xStart, int xStop) throws RemoteException {
-        pool = new ThreadPoolExecutor(NUMBER_OF_THREADS, NUMBER_OF_THREADS, 0L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>());
         Task task = new Task(yStart, yStop, xStart, xStop);
         pool.execute(task);
     }

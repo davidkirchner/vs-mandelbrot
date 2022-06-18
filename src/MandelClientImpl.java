@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 800;
-    public static final int DETAIL = 1024;
+    public static final int DETAIL = 800;
     public static double top = -1.0;
     public static double left = -2.0;
     public static double zoom = 1.0 / 512.0;
