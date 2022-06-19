@@ -36,7 +36,7 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
         // can be seen safe as it will not return empty.
         allClients = new ArrayList<MandelClient>();
         pool = new ThreadPoolExecutor(NUMBER_OF_THREADS, NUMBER_OF_THREADS, 0L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>());
+                new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
     }
 
     public synchronized boolean addClient(MandelClient client) throws RemoteException {

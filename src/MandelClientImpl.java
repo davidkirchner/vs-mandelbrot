@@ -25,8 +25,10 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     private String name;
     public int yStart, yStop, xStart, xStop;
     public static boolean mouseClick = false;
+    private ExecutorService pool;
 
     public MandelClientImpl(String name) throws RemoteException {
+        pool = Executors.newCachedThreadPool();
         this.name = name;
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         JLabel label = new JLabel(new ImageIcon(image));
@@ -73,7 +75,6 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     // }
 
     public void setRGB(int[][] bild) throws RemoteException, InterruptedException {
-        ExecutorService pool = Executors.newCachedThreadPool();
         IntStream.range(0, bild.length).forEach((i) -> {
             Runnable task = () -> {
                 for (int j = 0; j < bild[i].length; j++) {
@@ -83,6 +84,5 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
             pool.execute(task);
         });
         frame.repaint();
-        pool.shutdown();
     }
 }
