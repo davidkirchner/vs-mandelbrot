@@ -4,6 +4,10 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.IntStream;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,6 +35,7 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         frame.add(label);
         frame.pack();
         frame.setVisible(true);
+
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -57,12 +62,27 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         return name;
     }
 
-    public void setRGB(int[][] bild) throws RemoteException {
-        for (int i = 0; i < bild.length; i++) {
-            for (int j = 0; j < bild[i].length; j++) {
-                image.setRGB(i, j, bild[i][j]);
-            }
-        }
+    // public void setRGB(int[][] bild) throws RemoteException {
+    // class Task implements Runnable {}
+    // for (int i = 0; i < bild.length; i++) {
+    // for (int j = 0; j < bild[i].length; j++) {
+    // image.setRGB(i, j, bild[i][j]);
+    // }
+    // }
+    // frame.repaint();
+    // }
+
+    public void setRGB(int[][] bild) throws RemoteException, InterruptedException {
+        ExecutorService pool = Executors.newCachedThreadPool();
+        IntStream.range(0, bild.length).forEach((i) -> {
+            Runnable task = () -> {
+                for (int j = 0; j < bild[i].length; j++) {
+                    image.setRGB(i, j, bild[i][j]);
+                }
+            };
+            pool.execute(task);
+        });
         frame.repaint();
+        pool.shutdown();
     }
 }

@@ -52,9 +52,9 @@ public class MandelClientMain {
                     // image.
                     while (server.isFinish())
                         ;
-                    endTime = System.currentTimeMillis();
-                    System.out.printf("Iteration: %d. Finish calculating in (ms): %d\r", iter, endTime - startTime);
                     client.setRGB(server.returnColor());
+                    endTime = System.currentTimeMillis();
+                    System.out.printf("Iteration: %d. Finish in (ms): %d\r", iter, endTime - startTime);
                     iter++;
                     // Unless user clicks a point with a mouse, the same method
                     // can be used to block client sending unecessary tasks to server.
