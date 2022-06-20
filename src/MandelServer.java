@@ -2,7 +2,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface MandelServer extends Remote {
-    public boolean addClient(MandelClient client) throws RemoteException;
+    // public boolean addClient(MandelClient client) throws RemoteException;
 
     public void setDetail(int width, int height, int detail) throws RemoteException;
 

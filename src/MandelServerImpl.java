@@ -1,7 +1,5 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +13,7 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
     private static final int[] PALETTE = { 0x00421E0F, 0x0019071A, 0x0009012F, 0x00040449, 0x00000764, 0x000C2C8A,
             0x001852B1, 0x00397DD1, 0x0086B5E5, 0x00D3ECF8, 0x00F1E9BF, 0x00F8C95F, 0x00FFAA00, 0x00CC8000, 0x00995700,
             0x006A3403, };
-    private ArrayList<MandelClient> allClients;
+    // private ArrayList<MandelClient> allClients;
     private int[][] bild;
     private ThreadPoolExecutor pool;
 
@@ -34,27 +32,29 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
         // LinkedBlockingQueue is a FIFO queue, new elements are inserted at the
         // tail of the queue. Any attempt to retrieve a task out of the queue,
         // can be seen safe as it will not return empty.
-        allClients = new ArrayList<MandelClient>();
+        // allClients = new ArrayList<MandelClient>();
         pool = new ThreadPoolExecutor(NUMBER_OF_THREADS, NUMBER_OF_THREADS, 0L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
     }
 
-    public synchronized boolean addClient(MandelClient client) throws RemoteException {
-        String name = client.getName();
-        for (Iterator<MandelClient> iter = allClients.iterator(); iter.hasNext();) {
-            MandelClient mc = iter.next();
-            try {
-                if (mc.getName().equals(name)) {
-                    return false;
-                }
-            } catch (RemoteException exc) {
-                iter.remove();
-            }
-        }
-        allClients.add(client);
-        return true;
+    // TODO: support multiple clients
+    // public synchronized boolean addClient(MandelClient client) throws
+    // RemoteException {
+    // String name = client.getName();
+    // for (Iterator<MandelClient> iter = allClients.iterator(); iter.hasNext();) {
+    // MandelClient mc = iter.next();
+    // try {
+    // if (mc.getName().equals(name)) {
+    // return false;
+    // }
+    // } catch (RemoteException exc) {
+    // iter.remove();
+    // }
+    // }
+    // allClients.add(client);
+    // return true;
 
-    }
+    // }
 
     public void setDetail(int width, int height, int detail) throws RemoteException {
         this.detail = detail;
