@@ -39,7 +39,6 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         // calculation of RGB Values.
         server.setDetail(WIDTH, HEIGHT, DETAIL);
         frame = new JFrame("Mandelbrot");
-        frame.pack();
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
         JLabel label = new JLabel(new ImageIcon(image));
@@ -66,6 +65,7 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
             }
         });
         frame.add(label);
+        frame.pack();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
