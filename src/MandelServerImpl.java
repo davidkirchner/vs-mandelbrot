@@ -3,12 +3,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 public class MandelServerImpl extends UnicastRemoteObject implements MandelServer {
     private int detail;
     private double top;
     private double left;
     private double zoom;
+    private int width, height;
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
     private static final int[] PALETTE = { 0x00421E0F, 0x0019071A, 0x0009012F, 0x00040449, 0x00000764, 0x000C2C8A,
             0x001852B1, 0x00397DD1, 0x0086B5E5, 0x00D3ECF8, 0x00F1E9BF, 0x00F8C95F, 0x00FFAA00, 0x00CC8000, 0x00995700,
@@ -58,6 +60,8 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
 
     public void setDetail(int width, int height, int detail) throws RemoteException {
         this.detail = detail;
+        this.width = width;
+        this.height = height;
         this.bild = new int[width][height];
     }
 
@@ -69,6 +73,26 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
 
     public synchronized int[][] returnColor() throws RemoteException {
         return this.bild;
+    }
+
+    public void startCalculatingRGB() throws RemoteException {
+        // A for-loop but using IntStream (Java 8)
+        // for(int i = 0; i < MandelClientImpl.HEIGHT ; i += 10){}
+        // Client divides the entire Mandelbrot image into multiple
+        // smaller images (yStart, yStop, xStart, xStop).
+        // Client sends the smaller image as a task to server.
+        // Server uses ThreadPool with a fixed number of threads,
+        // When all threads are busy, new task will be queued.
+        //
+        // We will also handle the distributed system hier.
+        IntStream.iterate(0, i -> i + 10).limit(height / 10).parallel().forEach((i) -> {
+            try {
+                int j = i + 10;
+                calculateRGB(i, j, 0, width);
+            } catch (RemoteException re) {
+                re.printStackTrace();
+            }
+        });
     }
 
     public synchronized boolean isFinish() throws RemoteException {

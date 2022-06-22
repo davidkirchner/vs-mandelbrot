@@ -24,7 +24,6 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     public static double zoom = 1.0 / 512.0;
     private BufferedImage image;
     private JFrame frame;
-    private String name;
     public int yStart, yStop, xStart, xStop;
     public static boolean mouseClick = false;
     private ExecutorService pool;
@@ -80,26 +79,17 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     }
 
     public void sendTasks(MandelServer server) throws RemoteException {
+        // We send the server the coord and the zoom values.
         server.setImageProperties(top, left, zoom);
-        // A for-loop but using IntStream (Java 8)
-        // for(int i = 0; i < MandelClientImpl.HEIGHT ; i += 10){}
-        // Client divides the entire Mandelbrot image into multiple
-        // smaller images (yStart, yStop, xStart, xStop).
-        // Client sends the smaller image as a task to server.
-        // Server uses ThreadPool with a fixed number of threads,
-        // When all threads are busy, new task will be queued.
-        IntStream.iterate(0, i -> i + 10).limit(HEIGHT / 10).parallel().forEach((i) -> {
-            try {
-                int j = i + 10;
-                server.calculateRGB(i, j, 0, WIDTH);
-            } catch (RemoteException re) {
-                re.printStackTrace();
-            }
-        });
+        // Now let the master server do it job.
+        server.startCalculatingRGB();
+        // Let's wait for the result.
         while (server.isFinish())
             ;
+        // Server sends the result and client passes the result to ThreadPool
+        // Threads read the array and set the RGB
         setRGB(server.returnColor());
-        System.out.printf("Iteration: %d.\r", iter);
+        System.out.printf("Iteration: %d\r", iter);
         iter++;
     }
 
