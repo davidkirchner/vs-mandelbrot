@@ -1,5 +1,6 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,7 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
             0x001852B1, 0x00397DD1, 0x0086B5E5, 0x00D3ECF8, 0x00F1E9BF, 0x00F8C95F, 0x00FFAA00, 0x00CC8000, 0x00995700,
             0x006A3403, };
     // private ArrayList<MandelClient> allClients;
+    private ArrayList<MandelServer> slavServers;
     private int[][] bild;
     private ThreadPoolExecutor pool;
 
@@ -39,6 +41,8 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
                 new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
     }
 
+    public void initSlavServers() throws RemoteException {
+    }
     // TODO: support multiple clients
     // public synchronized boolean addClient(MandelClient client) throws
     // RemoteException {
@@ -96,9 +100,6 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
     }
 
     public synchronized boolean isFinish() throws RemoteException {
-        // Method getActiveCount returns the approximate number of active threads
-        // Whenn all tasks are done, this method will unblock client and he can
-        // update image (setRGB).
         if (pool.getActiveCount() == 0) {
             return false;
         }

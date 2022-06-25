@@ -16,4 +16,5 @@ public interface MandelServer extends Remote {
 
     public boolean isFinish() throws RemoteException;
 
+    public void initSlavServers() throws RemoteException;
 }
