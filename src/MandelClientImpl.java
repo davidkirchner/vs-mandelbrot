@@ -8,6 +8,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -28,6 +30,8 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     public static boolean mouseClick = false;
     private ExecutorService pool;
     private int iter = 0;
+
+    private Timer timer;
 
     public MandelClientImpl(MandelServer server) throws RemoteException {
         pool = Executors.newCachedThreadPool();
@@ -51,6 +55,7 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
                     left = (event.getX() - WIDTH / 4.0) * zoom + left;
                     top = (event.getY() - HEIGHT / 4.0) * zoom + top;
                     zoom = zoom / 2.0;
+                    System.out.println("left: " + left + " top:" + top + " zoom: " + zoom);
                 } else {
                     left = (event.getX() - WIDTH) * zoom + left;
                     top = (event.getY() - HEIGHT) * zoom + top;
@@ -78,6 +83,8 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         });
     }
 
+
+
     public void sendTasks(MandelServer server) throws RemoteException {
         // We send the server the coord and the zoom values.
         server.setImageProperties(top, left, zoom);
@@ -90,7 +97,55 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         // Threads read the array and set the RGB
         setRGB(server.returnColor());
         System.out.printf("Iteration: %d\r", iter);
+        System.out.println("left: " + left + " top:" + top + " zoom: " + zoom);
         iter++;
+    }
+
+    public void setZoomDestination(MandelServer server, double _left, double _top, double _zoom, int animationSteps) throws RemoteException {
+        timer = new Timer();
+        timer.schedule(new CountUpTimer(server, _left, _top, _zoom, animationSteps), 300, 300);
+    }
+
+    class CountUpTimer extends TimerTask{
+        private double destLeft, destTop, destZoom;
+        private int animationSteps;
+        private double leftSteps, topSteps, zoomSteps;
+        private MandelServer server;
+        int counter = 0;
+
+
+        CountUpTimer(MandelServer _server, double destinationLeft, double destinationTop, double destinationZoom, int steps){
+            destLeft = destinationLeft;
+            destTop = destinationTop;
+            destZoom = destinationZoom;
+            animationSteps = steps;
+
+            leftSteps = destLeft / animationSteps;
+            topSteps = destTop / animationSteps;
+            zoomSteps = destZoom / animationSteps;
+
+            left = 0;
+            top = 0;
+            zoom = 0;
+            server = _server;
+        }
+
+        public void run(){
+            if(counter < animationSteps){
+                left += leftSteps;
+                top += topSteps;
+                zoom += zoomSteps;
+
+                try {
+                    sendTasks(server);
+                } catch (RemoteException re) {
+                    re.printStackTrace();
+                }
+
+                counter++;
+            } else 
+                timer.cancel();
+        }
     }
 
     // TODO: support multiple clients
