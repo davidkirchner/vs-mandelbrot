@@ -15,4 +15,5 @@ public interface MandelServer extends Remote {
     public void startCalculatingRGB() throws RemoteException;
 
     public boolean isFinish() throws RemoteException;
+
 }

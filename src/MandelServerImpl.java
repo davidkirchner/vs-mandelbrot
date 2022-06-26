@@ -1,12 +1,13 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-public class MandelServerImpl extends UnicastRemoteObject implements MandelServer {
+public class MandelServerImpl extends UnicastRemoteObject implements MandelServer, ServerRegistry {
     private int detail;
     private double top;
     private double left;
@@ -17,7 +18,7 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
             0x001852B1, 0x00397DD1, 0x0086B5E5, 0x00D3ECF8, 0x00F1E9BF, 0x00F8C95F, 0x00FFAA00, 0x00CC8000, 0x00995700,
             0x006A3403, };
     // private ArrayList<MandelClient> allClients;
-    private ArrayList<MandelServer> slavServers;
+    private ArrayList<Slave> slavServers;
     private int[][] bild;
     private ThreadPoolExecutor pool;
 
@@ -37,8 +38,18 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
         // tail of the queue. Any attempt to retrieve a task out of the queue,
         // can be seen safe as it will not return empty.
         // allClients = new ArrayList<MandelClient>();
+        slavServers = new ArrayList<Slave>();
         pool = new ThreadPoolExecutor(NUMBER_OF_THREADS, NUMBER_OF_THREADS, 0L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
+    }
+
+
+    public void registry(Slave slave) throws RemoteException {
+        slavServers.add(slave);
+    }
+
+    public void unregistry(Slave slave) throws RemoteException {
+        slavServers.remove(slave);
     }
 
     // TODO: support multiple clients
@@ -87,7 +98,25 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
         // When all threads are busy, new task will be queued.
         //
         // We will also handle the distributed system hier.
-        IntStream.iterate(0, i -> i + 10).limit(height / 10).parallel().forEach((i) -> {
+        int k = 0;
+        int limit = height / 10;
+        int numberOfSlaves = slavServers.size() + 1;
+        if (numberOfSlaves > 1) {
+            for (Iterator<Slave> iter = slavServers.iterator(); iter.hasNext();) {
+                Slave sl = iter.next();
+                limit = (limit / numberOfSlaves) + k;
+                IntStream.iterate(k, i -> i + 10).limit(limit).parallel().forEach((i) -> {
+                    try {
+                        int j = i + 10;
+                        sl.calculateRGB(i, j, 0, width);
+                    } catch (RemoteException re) {
+                        re.printStackTrace();
+                    }
+                });
+                k += limit / numberOfSlaves;
+            }
+        }
+        IntStream.iterate(k, i -> i + 10).limit(limit).parallel().forEach((i) -> {
             try {
                 int j = i + 10;
                 calculateRGB(i, j, 0, width);
