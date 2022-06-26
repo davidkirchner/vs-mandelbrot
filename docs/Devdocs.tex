@@ -96,8 +96,7 @@
 
 	\begin{enumerate}
 		\item Konstruktor setzt die notwendigen Bildwerte zum Server und setzt JFrame und ActionListener fest.\\
-			\lstinputlisting[firstline=36, lastline=84]{../src/MandelClientImpl.java}
-			\newpage
+			\lstinputlisting[firstline=43, lastline=107]{../src/MandelClientImpl.java}
 		\item sendTasks schickt Request zum Server und wartet auf Antwort\\
 			\begin{enumerate}
 				\item Senden der Koordinaten und Werte von ActionListener zum Server
@@ -105,9 +104,9 @@
 				\item Client wartet auf Server
 				\item Client zeigt die zurueckgegeben RGB-Werte von Server an
 			\end{enumerate}
-			\lstinputlisting[firstline=88, lastline=102]{../src/MandelClientImpl.java}
+			\lstinputlisting[firstline=109, lastline=122]{../src/MandelClientImpl.java}
 		\item setRGB setzt Pixelfarbe des Bildes mit Nutzung eines Thread-Pools.
-			\lstinputlisting[firstline=165, lastline=175]{../src/MandelClientImpl.java}
+			\lstinputlisting[firstline=197, lastline=207]{../src/MandelClientImpl.java}
 	\end{enumerate}
 	
 	\newpage
@@ -132,23 +131,23 @@
 	\subsubsection{MandelServerImpl.java}
 	\begin{enumerate}
 		\item Konstruktor definiert Thread-Pool fuer Parallelität des Servers
-			\lstinputlisting[firstline=22, lastline=40]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=24, lastline=42]{../src/MandelServerImpl.java}
 		\item setDetails definiert die Laenge, Breite und Details (Iterationen) des Bildern und deklariert ein 2-dimensionales Array mit passender Laenge und Breite.
-			\lstinputlisting[firstline=61, lastline=66]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=65, lastline=70]{../src/MandelServerImpl.java}
 		\item setImageProperties setzt die Koordinaten von MouseActionListener.
-			\lstinputlisting[firstline=68, lastline=72]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=72, lastline=76]{../src/MandelServerImpl.java}
 		\item returnColor schickt ein 2-dimensionales Array zum Client zurueck
-			\lstinputlisting[firstline=74, lastline=76]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=78, lastline=80]{../src/MandelServerImpl.java}
 		\newpage		
 		\item startCalculateingRBG schnitt das Bild zu kleineren Bilden mit Hilfe der Nummer des Threads im Thread-Pool. Falls alle Threads "busy" sind, wartet Segment des Bildes 
-			\lstinputlisting[firstline=78, lastline=96]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=82, lastline=100]{../src/MandelServerImpl.java}
 		\item isFinish beanwortet, ob Bild fertig bearbeitet hat
-			\lstinputlisting[firstline=98, lastline=106]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=102, lastline=107]{../src/MandelServerImpl.java}
 		\item calculateRGB stellt Aufgabe zum Thread fest, um parallele Berechnung zu erreichen
-			\lstinputlisting[firstline=108, lastline=111]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=109, lastline=112]{../src/MandelServerImpl.java}
 		\newpage
 		\item Task berechnet die Mandelbrotmenge
-			\lstinputlisting[firstline=113, lastline=149]{../src/MandelServerImpl.java}
+			\lstinputlisting[firstline=114, lastline=149]{../src/MandelServerImpl.java}
 	\end{enumerate}
 	
 	\subsubsection{MandelServerMain.java}
