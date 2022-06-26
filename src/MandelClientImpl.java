@@ -32,6 +32,8 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     public static boolean mouseClick = false;
     public JTextField tfx;
     public JTextField tfy;
+    public JTextField starttfx;
+    public JTextField starttfy;
     private BufferedImage image;
     private JFrame frame;
     public int yStart, yStop, xStart, xStop;
@@ -54,6 +56,8 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         JButton button = new JButton("Start");
         tfx = new JTextField("-0.75");
         tfy = new JTextField("0");
+        starttfx = new JTextField("-0.75");
+        starttfy = new JTextField("-0.75");
         label.addMouseListener(new MouseAdapter() {
             // When client clicks on a point, this will
             // calculate the value of top, left and zoom therefore
@@ -90,6 +94,8 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         frame.add(label);
         frame.add(tfx);
         frame.add(tfy);
+        frame.add(starttfx);
+        frame.add(starttfy);
         frame.add(button);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -146,8 +152,12 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
             topSteps = destTop / animationSteps;
             zoomSteps = destZoom / animationSteps;
 
-            left = -0.75;
-            top = -0.75;
+            // left = (Double.parseDouble(starttfx.getText()) - WIDTH / 4.0) * zoom + left;
+            // top = (Double.parseDouble(starttfy.getText()) - HEIGHT / 4.0) * zoom + top;
+            left = Double.parseDouble(starttfx.getText());
+            top = Double.parseDouble(starttfy.getText());
+
+            
             zoom = 0;
             server = _server;
 
@@ -159,9 +169,14 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
             // Therefore if previous task is running, then new task do nothing
             if (!isRunning) {
                 isRunning = true;
+
+
                 if (counter < animationSteps) {
+
                     left += leftSteps;
                     top += topSteps;
+                    // left += diffx / animationSteps;
+                    // top += diffy / animationSteps;
                     zoom += zoomSteps;
 
                     try {
