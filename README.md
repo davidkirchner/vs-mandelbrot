@@ -5,7 +5,7 @@
 cd src
 javac *.java
 ```
-
+<br>
 
 ## Server starten:
 
@@ -13,7 +13,7 @@ javac *.java
 java MandelServerMain <servername>
 ```
 
-wobei <servermain> durch einen beliebigen Namen ersetzt werden muss
+wobei `<servername>` durch einen frei gewählten Namen ersetzt werden muss.
 
 <br>
   
@@ -23,4 +23,4 @@ wobei <servermain> durch einen beliebigen Namen ersetzt werden muss
 java MandelClientMain <serverIP> <servername>
 ```
   
-wobei <serverIP> durch den Hostname oder die IP des Servers sowie <servername> durch den zuvor vergebenen Server-Namen ersetzt werden muss.
+wobei `<serverIP>` durch den Hostname oder die IP des Servers sowie `<servername>` durch den zuvor vergebenen Server-Namen ersetzt werden muss.
