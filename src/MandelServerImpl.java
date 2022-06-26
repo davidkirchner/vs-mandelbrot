@@ -43,6 +43,7 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
                 new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
     }
 
+
     public void registry(Slave slave) throws RemoteException {
         slavServers.add(slave);
     }
@@ -50,6 +51,7 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
     public void unregistry(Slave slave) throws RemoteException {
         slavServers.remove(slave);
     }
+
     // TODO: support multiple clients
     // public synchronized boolean addClient(MandelClient client) throws
     // RemoteException {
