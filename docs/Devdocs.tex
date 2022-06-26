@@ -61,7 +61,7 @@
 
 \newpage
 \section{Kurzbeschreibung an Belegarbeit}
-	Um das Modul Programmierung verteilter Systeme zu erfassen, wird eine Gruppenarbeit zur Entwicklung eines verteilten Programms zur Anzeige der Mandelbrotmenge belegt:
+	Im Rahmen des Moduls Verteilte Systeme, soll als Beleg eine Java Anwendung zur Berechnung und Visualisierung der Mandelbrot-Menge entwickelt werden. Dabei sollen folgende Punkte umgesetzt werden:
 	\begin{itemize}
 		\item schrittweiser Zoom zu einem bestimmten Bildpunkt
 		\item Nutzung von Java-RMI oder einer anderen geeigneten Technologie zur Verteilung der Aufgaben
@@ -72,51 +72,51 @@
 \section{Architektur}
 	Nach der Diskussion mit anderen Gruppenteilnehmer wird das Programm mit folgenden Merkmalen realisiert:
 	\begin{itemize}
-		\item Übertragung mittels TCP
-		\item Nutzung von 2-dimensionalem Array zur Übertragung der Pixelfarbe
-		\item Thread-Pool im Client zum Anzeigen des berechneten Bildes
-		\item Verwendung von Threads im Server zur Berechnung der Mandelbrotmenge
+		\item Übertragung mittels Java-RMI, basierend auf TCP
+		\item Nutzung eines 2-dimensionalen int Arrays zur Übertragung der RGB Pixelfarben
+		\item Thread-Pool im Client zur beschleunigten Konvertierung von int Werte in BufferedImage Bildpunkte
+		\item Thread-Pool im Server zur gleichzeitigen und beschleunigten Berechnung der Bildpunkte
 	\end{itemize}
 	
 \section{Details der Programme}
 \subsection{Client}
-	Fuer den Client gibt es drei Java-Datein mit folgenden Bezeichnungen:
+	Für den Client gibt es drei Java-Dateien mit folgenden Bezeichnungen:
 	\begin{itemize}
 		\item MandelClient.java
 		\item MandelClientImpl.java
 		\item MandelClientMain.java
 	\end{itemize}
 \subsubsection{MandelClient.java}
-	Die Datei \glqq MandelClient.java\grqq definiert die Schnittstelle fuer das Clientprogramm. Die Methoden setRGB, sendTasks und setZoomDestination sind hier als Remote mit RemoteException deklariert.
+	Die Datei \glqq MandelClient.java\grqq definiert die Schnittstelle für das Clientprogramm. Die Methoden setRGB, sendTasks und setZoomDestination sind hier als Remote mit RemoteException deklariert.
 	\lstinputlisting[]{../src/MandelClient.java}
 
 	\newpage
 \subsubsection{MandelClientImpl.java}
-	Die Datei \glqq MandelClientImpl.java\grqq implementiert oben genannte Methoden fuer den Client.\\
+	Die Datei \glqq MandelClientImpl.java\grqq implementiert die oben genannte Methoden für den Client.\\
 
 	\begin{enumerate}
-		\item Konstruktor setzt die notwendigen Bildwerte zum Server und setzt JFrame und ActionListener fest.\\
+		\item Der Konstruktor setzt die notwendigen Bildwerte zum Server und setzt JFrame und ActionListener fest.\\
 			\lstinputlisting[firstline=43, lastline=107]{../src/MandelClientImpl.java}
-		\item sendTasks schickt Request zum Server und wartet auf Antwort\\
+		\item sendTasks schickt ein Request zum Server und wartet auf dessen Antwort\\
 			\begin{enumerate}
 				\item Senden der Koordinaten und Werte von ActionListener zum Server
 				\item Server startet Berechnung der Mandelbrotmenge mit Zoom zu den gegebenen Koordinaten
 				\item Client wartet auf Server
-				\item Client zeigt die zurueckgegeben RGB-Werte von Server an
+				\item Client zeigt die zurückgegebenen RGB-Werte von Server als BufferedImage an.
 			\end{enumerate}
 			\lstinputlisting[firstline=109, lastline=122]{../src/MandelClientImpl.java}
-		\item setRGB setzt Pixelfarbe des Bildes mit Nutzung eines Thread-Pools.
+		\item setRGB setzt die Pixelfarbe des Bildes mit Nutzung eines Thread-Pools.
 			\lstinputlisting[firstline=197, lastline=207]{../src/MandelClientImpl.java}
 	\end{enumerate}
 	
 	\newpage
 	\subsubsection{MandelClientMain.java}
-	Die Datei \glqq MandelClientMain.java\grqq sucht den Server mit bestimmtem Namen (welcher durch args[]-Variable gesetzt wurde) und schickt dann Request zum Server.
+	Die Datei \glqq MandelClientMain.java\grqq sucht den Server (RMI-Registry) mittels IP/ Hostnamen (welcher durch die args[0]-Variable gesetzt wurde). Durch die args[1]-Variable wird das Name Binding des Servers spezifiziert. Anschließend sendet der Client mit sendTasks() die Berechnungsaufgabe an den Server.
 	\lstinputlisting[]{../src/MandelClientMain.java}
 
 	\newpage
 	\subsection{Server}
-	Fuer den Client gibt es drei Javadateien mit Name:
+	für den Client gibt es drei Javadateien mit Name:
 	\begin{itemize}
 		\item MandelServer.java
 		\item MandelServerImpl.java
@@ -124,13 +124,13 @@
 	\end{itemize}
 	
 	\subsubsection{MandelServer.java}
-	Die Datei \glqq MandelServer.java\grqq definiert die Schnittstelle fuer das Serverprogramm. Die Methoden setDetail, setImageProperties, calculateRGB, returnColor, startCalculatingRGB und isFinish sind hier als Remote mit RemoteException deklariert.
+	Die Datei \glqq MandelServer.java\grqq definiert die Schnittstelle für das Serverprogramm. Die Methoden setDetail, setImageProperties, calculateRGB, returnColor, startCalculatingRGB und isFinish sind hier als Remote mit RemoteException deklariert.
 	\lstinputlisting[]{../src/MandelServer.java}
 	
 	\newpage	
 	\subsubsection{MandelServerImpl.java}
 	\begin{enumerate}
-		\item Konstruktor definiert Thread-Pool fuer Parallelität des Servers
+		\item Konstruktor definiert Thread-Pool für Parallelität des Servers
 			\lstinputlisting[firstline=24, lastline=42]{../src/MandelServerImpl.java}
 		\item setDetails definiert die Laenge, Breite und Details (Iterationen) des Bildern und deklariert ein 2-dimensionales Array mit passender Laenge und Breite.
 			\lstinputlisting[firstline=65, lastline=70]{../src/MandelServerImpl.java}
