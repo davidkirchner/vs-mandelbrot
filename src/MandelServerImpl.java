@@ -41,8 +41,6 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
                 new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
     }
 
-    public void initSlavServers() throws RemoteException {
-    }
     // TODO: support multiple clients
     // public synchronized boolean addClient(MandelClient client) throws
     // RemoteException {

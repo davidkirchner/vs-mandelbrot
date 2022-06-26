@@ -1,6 +1,6 @@
-import java.awt.*;
-import java.awt.event.*;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -116,12 +116,17 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         // We send the server the coord and the zoom values.
         server.setImageProperties(top, left, zoom);
         // Now let the master server do it job.
+        // startCalculatingRGB is an API that sends a signal to the server to
+        // begin calculating RGB.
         server.startCalculatingRGB();
         // Let's wait for the result.
+        // Client waits actively (busy waiting) until server finishes calculating
+        // RGB-Values. isFinish() will return true if server is not done.
         while (server.isFinish())
             ;
         // Server sends the result and client passes the result to ThreadPool
         // Threads read the array and set the RGB
+        // returnColor() returns the color array.
         setRGB(server.returnColor());
         System.out.println("Iteration: " + iter + "| left: " + left + "| top:" + top + "| zoom: " + zoom);
         iter++;
@@ -210,6 +215,14 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     // frame.repaint();
     // }
     public void setRGB(int[][] bild) throws RemoteException {
+		// Split the array into multiple smaller arrays, each of them becomes a
+		// task. Use ThreadPool instead of 2 loops in order to read and set the
+		// image RGB faster.
+		// Because all the tasks are short-lived, the Cached Thread Pool is used
+		// This Thread Pool uses synchronous handoff to queue new tasks. If there
+		// is an idle thread, the task will be handed to that thread. Otherwise
+		// executor creates a new thread to handle this task. That means number
+		// of threads is dynamic and depends on number of tasks
         IntStream.range(0, bild.length).forEach((i) -> {
             Runnable task = () -> {
                 for (int j = 0; j < bild[i].length; j++) {
