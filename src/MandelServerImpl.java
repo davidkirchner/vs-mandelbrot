@@ -1,3 +1,5 @@
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -18,11 +20,11 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
             0x001852B1, 0x00397DD1, 0x0086B5E5, 0x00D3ECF8, 0x00F1E9BF, 0x00F8C95F, 0x00FFAA00, 0x00CC8000, 0x00995700,
             0x006A3403, };
     // private ArrayList<MandelClient> allClients;
-    private ArrayList<Slave> slavServers;
+    private ArrayList<Slave> slaveServers;
     private int[][] bild;
     private ThreadPoolExecutor pool;
 
-    public MandelServerImpl() throws RemoteException {
+    public MandelServerImpl(ArrayList<String> slaveIPs) throws RemoteException {
         // Unbounded queues. Using an unbounded queue (for example a LinkedBlockingQueue
         // without a predefined capacity) will cause new tasks to wait in the queue when
         // all corePoolSize threads are busy. Thus, no more than corePoolSize threads
@@ -38,18 +40,34 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
         // tail of the queue. Any attempt to retrieve a task out of the queue,
         // can be seen safe as it will not return empty.
         // allClients = new ArrayList<MandelClient>();
-        slavServers = new ArrayList<Slave>();
+        slaveServers = new ArrayList<Slave>();
+        if (slaveIPs.size() > 0) {
+            try {
+                for (int i = 0; i < slaveIPs.size(); i++) {
+                    Slave slave = (Slave) Naming.lookup("rmi://" + slaveIPs.get(i) + "/slave");
+                    slaveServers.add(slave);
+                }
+            } catch (RemoteException re) {
+                System.out.println("Registry could not be found.");
+                re.printStackTrace();
+            } catch (NotBoundException nbe) {
+                System.out.println("Name 'slave' is not currently bound");
+                nbe.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         pool = new ThreadPoolExecutor(NUMBER_OF_THREADS, NUMBER_OF_THREADS, 0L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(), new ThreadPoolExecutor.DiscardPolicy());
     }
 
-
     public void registry(Slave slave) throws RemoteException {
-        slavServers.add(slave);
+        slaveServers.add(slave);
     }
 
     public void unregistry(Slave slave) throws RemoteException {
-        slavServers.remove(slave);
+        slaveServers.remove(slave);
     }
 
     // TODO: support multiple clients
@@ -100,9 +118,9 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
         // We will also handle the distributed system hier.
         int k = 0;
         int limit = height / 10;
-        int numberOfSlaves = slavServers.size() + 1;
+        int numberOfSlaves = slaveServers.size() + 1;
         if (numberOfSlaves > 1) {
-            for (Iterator<Slave> iter = slavServers.iterator(); iter.hasNext();) {
+            for (Iterator<Slave> iter = slaveServers.iterator(); iter.hasNext();) {
                 Slave sl = iter.next();
                 limit = (limit / numberOfSlaves) + k;
                 IntStream.iterate(k, i -> i + 10).limit(limit).parallel().forEach((i) -> {

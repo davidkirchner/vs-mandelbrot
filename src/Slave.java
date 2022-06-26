@@ -4,7 +4,7 @@ import java.rmi.registry.*;
 
 public class Slave extends MandelServerImpl {
     public Slave() throws RemoteException {
-        super();
+        super(null);
     }
 
     public static void main(String[] args) {
