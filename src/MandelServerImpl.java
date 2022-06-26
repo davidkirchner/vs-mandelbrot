@@ -98,6 +98,8 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
     }
 
     public synchronized boolean isFinish() throws RemoteException {
+		// getActiveCount() returns the number of active thread. Whenn this number
+		// is 0, then server is finish calculating the color.
         if (pool.getActiveCount() == 0) {
             return false;
         }
@@ -105,7 +107,10 @@ public class MandelServerImpl extends UnicastRemoteObject implements MandelServe
     }
 
     public void calculateRGB(int yStart, int yStop, int xStart, int xStop) throws RemoteException {
+		// Create new task
         Task task = new Task(yStart, yStop, xStart, xStop);
+		// Execute task. ThreadPoolExecutor adds task to queue, and only if there
+		// is free thread, then this task will be removed from queue and be executed
         pool.execute(task);
     }
 
