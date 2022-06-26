@@ -95,7 +95,7 @@
 	Die Datei \glqq MandelClientImpl.java\grqq implementiert die oben genannte Methoden für den Client.\\
 
 	\begin{enumerate}
-		\item Der Konstruktor setzt die notwendigen Bildwerte zum Server und setzt JFrame und ActionListener fest.\\
+		\item Der Konstruktor setzt die notwendigen Bildwerte zum Server und setzt für und ActionListener fest.\\
 			\lstinputlisting[firstline=43, lastline=107]{../src/MandelClientImpl.java}
 		\item sendTasks schickt ein Request zum Server und wartet auf dessen Antwort\\
 			\begin{enumerate}
@@ -150,9 +150,28 @@
 			\lstinputlisting[firstline=114, lastline=149]{../src/MandelServerImpl.java}
 	\end{enumerate}
 	
-	\subsubsection{MandelServerMain.java}
+	\subsection{MandelServerMain.java}
 	Die Datei \glqq MandelServerMain.java\grqq stellt ein Registry fest und verbindet mit Serverschnittstelle
 	\lstinputlisting[]{../src/MandelServerMain.java}
+	
+	\subsubsection{Multi Server Funktionalität}
+	Unser ursprünglicher Plan war es, die Möglichkeit zu bieten, die Berechnungen nicht nur auf einen entfernten Rechner
+	mit Multithreading auszulagern, sondern die Berechnung nochmals auf mehrere Server aufzuteilen.
+	Die Idee war dabei, dass der Client mit einem Master Server kommuniziert, welcher wiederum mehrere Slave Server koordiniert.
+	Bei z.B. 3 Slave Servern sollte das Bild in 3 Zeilen zerlegt werden, wobei jeder Slave Server je ein Drittel des gesamten Bildes
+	berechnet hätte.
+	Auf jedem Slave Server wären dann die zugeteilten Bildzeilen nochmals in n Teile zerlegt worden, um damit n Threads mit Multi-Threading
+	zu starten.\\
+	Leider war es uns zeitlich nicht mehr möglich diese Funktion fertigzustellen.
+	Der bisherige Stand lässt sich im Branch multi-server einsehen.
+	
+	\section{Bedienung}
+	Im Client kann manuell im Bild mithilfe der Maus navigiert werden. Ein Linksklick zoomt das Bild auf die aktuelle Position des Mauszeigers hinein.
+	Mit Rechtsklick kann wieder herausgezoomt werden.\\
+	An der Rechten Seite befinden sich 4 Text Felder in denen die x/y Position für den Startpunkt und den Zielpunkt der Animation eingetragen werden
+	können. Mit einem Klick auf den Start Button, beginnt die Animation.
+	
+	
 	
 	\newpage
 	\section{Link und Literatur}
