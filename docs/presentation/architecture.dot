@@ -1,0 +1,26 @@
+digraph vsmandel {
+    label = "VS-Mandelbrot"
+    labelloc = "t"
+    labeljust = "c"
+    rankdir = LR
+	splines = spline
+	fontname="Helvetica,Arial,sans-serif"
+	node [fontname="Helvetica,Arial,sans-serif"]
+	edge [fontname="Helvetica,Arial,sans-serif"]
+  	subgraph cluster_0 {
+  		style=filled;
+  	  	color=grey;
+  	  	node [style=filled, color=white];
+  	  	Slave [shape = Msquare];
+  	  	label = "nicht implementiert";
+  	}
+
+  	// node define
+  	Client;
+  	TCP [shape = box];
+  	Master [shape = Msquare];
+  	// edge define
+  	Client -> TCP -> Client;
+  	TCP -> Master -> TCP;
+  	Master -> Slave -> Master;
+}
