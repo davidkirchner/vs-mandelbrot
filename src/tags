@@ -1,0 +1,90 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/silentflick/Documents/archive/vs-mandelbrot/src/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210905.0/
+CountUpTimer	MandelClientImpl.java	/^        CountUpTimer(MandelServer _server, double destinationLeft, double destinationTop, double/;"	m	class:MandelClientImpl.CountUpTimer
+CountUpTimer	MandelClientImpl.java	/^    class CountUpTimer extends TimerTask {$/;"	c	class:MandelClientImpl
+DETAIL	MandelClientImpl.java	/^    public static final int DETAIL = 800;$/;"	f	class:MandelClientImpl
+HEIGHT	MandelClientImpl.java	/^    public static final int HEIGHT = 800;$/;"	f	class:MandelClientImpl
+MandelClient	MandelClient.java	/^public interface MandelClient extends Remote {$/;"	i
+MandelClientImpl	MandelClientImpl.java	/^    public MandelClientImpl(MandelServer server) throws RemoteException {$/;"	m	class:MandelClientImpl
+MandelClientImpl	MandelClientImpl.java	/^class MandelClientImpl extends UnicastRemoteObject implements MandelClient {$/;"	c
+MandelClientMain	MandelClientMain.java	/^public class MandelClientMain {$/;"	c
+MandelServer	MandelServer.java	/^public interface MandelServer extends Remote {$/;"	i
+MandelServerImpl	MandelServerImpl.java	/^    public MandelServerImpl() throws RemoteException {$/;"	m	class:MandelServerImpl
+MandelServerImpl	MandelServerImpl.java	/^public class MandelServerImpl extends UnicastRemoteObject implements MandelServer {$/;"	c
+MandelServerMain	MandelServerMain.java	/^public class MandelServerMain {$/;"	c
+NUMBER_OF_THREADS	MandelServerImpl.java	/^    private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();$/;"	f	class:MandelServerImpl	file:
+PALETTE	MandelServerImpl.java	/^    private static final int[] PALETTE = { 0x00421E0F, 0x0019071A, 0x0009012F, 0x00040449, 0x000/;"	f	class:MandelServerImpl	file:
+Task	MandelServerImpl.java	/^        public Task(int yStart, int yStop, int xStart, int xStop) {$/;"	m	class:MandelServerImpl.Task
+Task	MandelServerImpl.java	/^    class Task implements Runnable {$/;"	c	class:MandelServerImpl
+WIDTH	MandelClientImpl.java	/^    public static final int WIDTH = 1200;$/;"	f	class:MandelClientImpl
+animationSteps	MandelClientImpl.java	/^        private int animationSteps;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+bild	MandelServerImpl.java	/^    private int[][] bild;$/;"	f	class:MandelServerImpl	file:
+calculateRGB	MandelServer.java	/^    public void calculateRGB(int yStart, int yStop, int xStart, int xStop) throws RemoteExceptio/;"	m	interface:MandelServer
+calculateRGB	MandelServerImpl.java	/^    public void calculateRGB(int yStart, int yStop, int xStart, int xStop) throws RemoteExceptio/;"	m	class:MandelServerImpl
+counter	MandelClientImpl.java	/^        int counter = 0;$/;"	f	class:MandelClientImpl.CountUpTimer
+destLeft	MandelClientImpl.java	/^        private double destLeft, destTop, destZoom;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+destTop	MandelClientImpl.java	/^        private double destLeft, destTop, destZoom;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+destZoom	MandelClientImpl.java	/^        private double destLeft, destTop, destZoom;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+detail	MandelServerImpl.java	/^    private int detail;$/;"	f	class:MandelServerImpl	file:
+frame	MandelClientImpl.java	/^    private JFrame frame;$/;"	f	class:MandelClientImpl	file:
+height	MandelServerImpl.java	/^    private int width, height;$/;"	f	class:MandelServerImpl	file:
+image	MandelClientImpl.java	/^    private BufferedImage image;$/;"	f	class:MandelClientImpl	file:
+isFinish	MandelServer.java	/^    public boolean isFinish() throws RemoteException;$/;"	m	interface:MandelServer
+isFinish	MandelServerImpl.java	/^    public synchronized boolean isFinish() throws RemoteException {$/;"	m	class:MandelServerImpl
+isRunning	MandelClientImpl.java	/^        private boolean isRunning;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+iter	MandelClientImpl.java	/^    private int iter = 0;$/;"	f	class:MandelClientImpl	file:
+left	MandelClientImpl.java	/^    public static double left = -2.0;$/;"	f	class:MandelClientImpl
+left	MandelServerImpl.java	/^    private double left;$/;"	f	class:MandelServerImpl	file:
+leftSteps	MandelClientImpl.java	/^        private double leftSteps, topSteps, zoomSteps;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+main	MandelClientMain.java	/^    public static void main(String[] args) {$/;"	m	class:MandelClientMain
+main	MandelServerMain.java	/^    public static void main(String[] args) {$/;"	m	class:MandelServerMain
+mouseClick	MandelClientImpl.java	/^    public static boolean mouseClick = false;$/;"	f	class:MandelClientImpl
+pool	MandelClientImpl.java	/^    private ExecutorService pool;$/;"	f	class:MandelClientImpl	file:
+pool	MandelServerImpl.java	/^    private ThreadPoolExecutor pool;$/;"	f	class:MandelServerImpl	file:
+returnColor	MandelServer.java	/^    public int[][] returnColor() throws RemoteException;$/;"	m	interface:MandelServer
+returnColor	MandelServerImpl.java	/^    public synchronized int[][] returnColor() throws RemoteException {$/;"	m	class:MandelServerImpl
+run	MandelClientImpl.java	/^        public void run() {$/;"	m	class:MandelClientImpl.CountUpTimer
+run	MandelServerImpl.java	/^        public void run() {$/;"	m	class:MandelServerImpl.Task
+sendTasks	MandelClient.java	/^    public void sendTasks(MandelServer server) throws RemoteException;$/;"	m	interface:MandelClient
+sendTasks	MandelClientImpl.java	/^    public void sendTasks(MandelServer server) throws RemoteException {$/;"	m	class:MandelClientImpl
+server	MandelClientImpl.java	/^        private MandelServer server;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+setDetail	MandelServer.java	/^    public void setDetail(int width, int height, int detail) throws RemoteException;$/;"	m	interface:MandelServer
+setDetail	MandelServerImpl.java	/^    public void setDetail(int width, int height, int detail) throws RemoteException {$/;"	m	class:MandelServerImpl
+setImageProperties	MandelServer.java	/^    public void setImageProperties(double top, double left, double zoom) throws RemoteException;$/;"	m	interface:MandelServer
+setImageProperties	MandelServerImpl.java	/^    public void setImageProperties(double top, double left, double zoom) throws RemoteException /;"	m	class:MandelServerImpl
+setRGB	MandelClient.java	/^    public void setRGB(int[][] bild) throws RemoteException;$/;"	m	interface:MandelClient
+setRGB	MandelClientImpl.java	/^    public void setRGB(int[][] bild) throws RemoteException {$/;"	m	class:MandelClientImpl
+setZoomDestination	MandelClient.java	/^    public void setZoomDestination(MandelServer server, double left, double top, double zoom, in/;"	m	interface:MandelClient
+setZoomDestination	MandelClientImpl.java	/^    public void setZoomDestination(MandelServer server, double _left, double _top, double _zoom,/;"	m	class:MandelClientImpl
+slavServers	MandelServerImpl.java	/^    private ArrayList<MandelServer> slavServers;$/;"	f	class:MandelServerImpl	file:
+startCalculatingRGB	MandelServer.java	/^    public void startCalculatingRGB() throws RemoteException;$/;"	m	interface:MandelServer
+startCalculatingRGB	MandelServerImpl.java	/^    public void startCalculatingRGB() throws RemoteException {$/;"	m	class:MandelServerImpl
+starttfx	MandelClientImpl.java	/^    public JTextField starttfx;$/;"	f	class:MandelClientImpl
+starttfy	MandelClientImpl.java	/^    public JTextField starttfy;$/;"	f	class:MandelClientImpl
+tfx	MandelClientImpl.java	/^    public JTextField tfx;$/;"	f	class:MandelClientImpl
+tfy	MandelClientImpl.java	/^    public JTextField tfy;$/;"	f	class:MandelClientImpl
+timer	MandelClientImpl.java	/^    private Timer timer;$/;"	f	class:MandelClientImpl	file:
+top	MandelClientImpl.java	/^    public static double top = -1.0;$/;"	f	class:MandelClientImpl
+top	MandelServerImpl.java	/^    private double top;$/;"	f	class:MandelServerImpl	file:
+topSteps	MandelClientImpl.java	/^        private double leftSteps, topSteps, zoomSteps;$/;"	f	class:MandelClientImpl.CountUpTimer	file:
+width	MandelServerImpl.java	/^    private int width, height;$/;"	f	class:MandelServerImpl	file:
+xStart	MandelClientImpl.java	/^    public int yStart, yStop, xStart, xStop;$/;"	f	class:MandelClientImpl
+xStart	MandelServerImpl.java	/^        private int xStart;$/;"	f	class:MandelServerImpl.Task	file:
+xStop	MandelClientImpl.java	/^    public int yStart, yStop, xStart, xStop;$/;"	f	class:MandelClientImpl
+xStop	MandelServerImpl.java	/^        private int xStop;$/;"	f	class:MandelServerImpl.Task	file:
+yStart	MandelClientImpl.java	/^    public int yStart, yStop, xStart, xStop;$/;"	f	class:MandelClientImpl
+yStart	MandelServerImpl.java	/^        private int yStart;$/;"	f	class:MandelServerImpl.Task	file:
+yStop	MandelClientImpl.java	/^    public int yStart, yStop, xStart, xStop;$/;"	f	class:MandelClientImpl
+yStop	MandelServerImpl.java	/^        private int yStop;$/;"	f	class:MandelServerImpl.Task	file:
+zoom	MandelClientImpl.java	/^    public static double zoom = 1.0 \/ 512.0;$/;"	f	class:MandelClientImpl
+zoom	MandelServerImpl.java	/^    private double zoom;$/;"	f	class:MandelServerImpl	file:
+zoomSteps	MandelClientImpl.java	/^        private double leftSteps, topSteps, zoomSteps;$/;"	f	class:MandelClientImpl.CountUpTimer	file:

@@ -1,6 +1,4 @@
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -13,9 +11,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
-
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -53,11 +49,11 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         frame = new JFrame("Mandelbrot");
         frame.setLocationRelativeTo(null);
         JLabel label = new JLabel(new ImageIcon(image));
-        JButton button = new JButton("Start");
+        /*JButton button = new JButton("Start");
         tfx = new JTextField("-0.75");
         tfy = new JTextField("0");
         starttfx = new JTextField("-0.75");
-        starttfy = new JTextField("-0.75");
+        starttfy = new JTextField("-0.75");*/
         label.addMouseListener(new MouseAdapter() {
             // When client clicks on a point, this will
             // calculate the value of top, left and zoom therefore
@@ -80,29 +76,31 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
                 }
             }
         });
-        button.addActionListener(new ActionListener() {
+        /*button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    setZoomDestination(server, Double.parseDouble(tfx.getText()), Double.parseDouble(tfy.getText()),
-                            zoom, 50);
+                    setZoomDestination(
+                        server, Double.parseDouble(tfx.getText()),
+                        Double.parseDouble(tfy.getText()), zoom, 50);
                 } catch (RemoteException re) {
                     re.printStackTrace();
                 }
             }
-        });
+        });*/
         frame.setLayout(new FlowLayout());
         frame.add(label);
-        frame.add(tfx);
+        /*frame.add(tfx);
         frame.add(tfy);
         frame.add(starttfx);
         frame.add(starttfy);
-        frame.add(button);
+        frame.add(button);*/
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (JOptionPane.showConfirmDialog(frame, "Are you sure?") == JOptionPane.OK_OPTION) {
+                if (JOptionPane.showConfirmDialog(frame, "Are you sure?") ==
+                    JOptionPane.OK_OPTION) {
                     pool.shutdown();
                     frame.dispose();
                     System.exit(0);
@@ -120,22 +118,27 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         // begin calculating RGB.
         server.startCalculatingRGB();
         // Let's wait for the result.
-        // Client waits actively (busy waiting) until server finishes calculating
-        // RGB-Values. isFinish() will return true if server is not done.
+        // Client waits actively (busy waiting) until server finishes
+        // calculating RGB-Values. isFinish() will return true if server is not
+        // done.
         while (server.isFinish())
             ;
         // Server sends the result and client passes the result to ThreadPool
         // Threads read the array and set the RGB
         // returnColor() returns the color array.
         setRGB(server.returnColor());
-        System.out.println("Iteration: " + iter + "| left: " + left + "| top:" + top + "| zoom: " + zoom);
+        System.out.println("Iteration: " + iter + "| left: " + left +
+                           "| top:" + top + "| zoom: " + zoom);
         iter++;
     }
 
-    public void setZoomDestination(MandelServer server, double _left, double _top, double _zoom, int animationSteps)
-            throws RemoteException {
+    public void setZoomDestination(MandelServer server, double _left,
+                                   double _top, double _zoom,
+                                   int animationSteps) throws RemoteException {
         timer = new Timer();
-        timer.schedule(new CountUpTimer(server, _left, _top, _zoom, animationSteps), 300, 300);
+        timer.schedule(
+            new CountUpTimer(server, _left, _top, _zoom, animationSteps), 300,
+            300);
     }
 
     class CountUpTimer extends TimerTask {
@@ -146,8 +149,8 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
         private boolean isRunning;
         int counter = 0;
 
-        CountUpTimer(MandelServer _server, double destinationLeft, double destinationTop, double destinationZoom,
-                int steps) {
+        CountUpTimer(MandelServer _server, double destinationLeft,
+                     double destinationTop, double destinationZoom, int steps) {
             destLeft = destinationLeft;
             destTop = destinationTop;
             destZoom = destinationZoom;
@@ -157,12 +160,12 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
             topSteps = destTop / animationSteps;
             zoomSteps = destZoom / animationSteps;
 
-            // left = (Double.parseDouble(starttfx.getText()) - WIDTH / 4.0) * zoom + left;
-            // top = (Double.parseDouble(starttfy.getText()) - HEIGHT / 4.0) * zoom + top;
+            // left = (Double.parseDouble(starttfx.getText()) - WIDTH / 4.0) *
+            // zoom + left; top = (Double.parseDouble(starttfy.getText()) -
+            // HEIGHT / 4.0) * zoom + top;
             left = Double.parseDouble(starttfx.getText());
             top = Double.parseDouble(starttfy.getText());
 
-            
             zoom = 0;
             server = _server;
 
@@ -174,7 +177,6 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
             // Therefore if previous task is running, then new task do nothing
             if (!isRunning) {
                 isRunning = true;
-
 
                 if (counter < animationSteps) {
 
@@ -215,14 +217,14 @@ class MandelClientImpl extends UnicastRemoteObject implements MandelClient {
     // frame.repaint();
     // }
     public void setRGB(int[][] bild) throws RemoteException {
-		// Split the array into multiple smaller arrays, each of them becomes a
-		// task. Use ThreadPool instead of 2 loops in order to read and set the
-		// image RGB faster.
-		// Because all the tasks are short-lived, the Cached Thread Pool is used
-		// This Thread Pool uses synchronous handoff to queue new tasks. If there
-		// is an idle thread, the task will be handed to that thread. Otherwise
-		// executor creates a new thread to handle this task. That means number
-		// of threads is dynamic and depends on number of tasks
+        // Split the array into multiple smaller arrays, each of them becomes a
+        // task. Use ThreadPool instead of 2 loops in order to read and set the
+        // image RGB faster.
+        // Because all the tasks are short-lived, the Cached Thread Pool is used
+        // This Thread Pool uses synchronous handoff to queue new tasks. If
+        // there is an idle thread, the task will be handed to that thread.
+        // Otherwise executor creates a new thread to handle this task. That
+        // means number of threads is dynamic and depends on number of tasks
         IntStream.range(0, bild.length).forEach((i) -> {
             Runnable task = () -> {
                 for (int j = 0; j < bild[i].length; j++) {
